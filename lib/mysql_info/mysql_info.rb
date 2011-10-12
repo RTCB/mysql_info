@@ -1,7 +1,17 @@
 require 'active_record'
 require 'yaml'
+require 'set'
 
 module MysqlInfo
+  CONFIG_PATH = "~/database.yaml"
+
+  KEYS = [
+    :host,
+    :username,
+    :password,
+    :database
+  ]
+
   PRIVILEGE_TYPES = [
     'SELECT',
     'INSERT',
@@ -31,7 +41,6 @@ module MysqlInfo
   #
   # @example
   #   # database.yml
-  #   adapter  : mysql
   #   host     : localhost
   #   username : reader
   #   password : password
@@ -43,15 +52,32 @@ module MysqlInfo
   #
   # @param [Boolean] local should be set to true when debugging
   def self.connect
-      ActiveRecord::Base.establish_connection(
-        YAML::load(
-          File.open(
-            Common::PROJECT_DIR + 'database.yml'
-          )
-        )
-      )
+      ActiveRecord::Base
+        .establish_connection(self.parse_config)
   end
 
+  def self.parse_config
+    begin
+      f = File.open(MysqlInfo::CONFIG_PATH)
+    rescue Errno::ENOENT => e
+      puts "Configuration file not found"
+      puts e.message
+      raise
+    rescue Errno::EACCESS => e
+      puts "Permission denied for reading configuration file"
+      puts e.message
+      raise
+    end
 
+    begin
+      config = YAML.load(f)
+    rescue ArgumentError => e
+      puts "Wrong format of config file"
+      puts e.message
+    end
+
+    return {}
+
+  end
 
 end
