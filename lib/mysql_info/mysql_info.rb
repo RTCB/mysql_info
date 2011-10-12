@@ -1,4 +1,4 @@
-require
+require 'active_record'
 
 module MysqlInfo
   PRIVILEGE_TYPES = [
@@ -21,10 +21,10 @@ module MysqlInfo
     'EVENT',
     'TRIGGER'
   ]
+
   # Connect to the MySQL database server
   #
-  # Method searches for database.yml file in
-  # {Common::PROJECT_DIR}.
+  # Method searches for database.yml file in {Common::PROJECT_DIR}.
   # It then uses the credentials from that file to
   # connect to the database server.
   #
