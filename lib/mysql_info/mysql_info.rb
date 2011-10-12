@@ -1,4 +1,5 @@
 require 'active_record'
+require 'yaml'
 
 module MysqlInfo
   PRIVILEGE_TYPES = [
@@ -50,5 +51,7 @@ module MysqlInfo
         )
       )
   end
+
+
 
 end
