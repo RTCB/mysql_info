@@ -1,0 +1,10 @@
+%head
+  %link{:rel => 'stylesheet', :type => 'text/css', :href => 'css/style.css'}
+%body
+  %table
+    - @name_size.each do |entry|
+      %tr
+        %td
+          = entry[0]
+        %td
+          = MysqlInfo.commify((entry[1].to_f/1048576).round(1))
