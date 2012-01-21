@@ -1,10 +1,16 @@
 %head
   %link{:rel => 'stylesheet', :type => 'text/css', :href => 'css/style.css'}
 %body
-  %table
-    - @name_size.each do |entry|
+  #main
+    %table
       %tr
-        %td
-          = entry[0]
-        %td
-          = MysqlInfo.commify((entry[1].to_f/1048576).round(1))
+        %th
+          Name
+        %th
+          Size in Mb
+      - @name_size.each_with_index do |entry, i|
+        %tr{:class => i.even? ? 'even' : 'odd'}
+          %td
+            = entry[0]
+          %td
+            = MysqlInfo.commify((entry[1].to_f/1048576).round(1))
