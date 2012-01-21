@@ -1,5 +1,5 @@
 require 'sinatra/base'
-require 'mysql2'
+require 'active_record'
 require 'haml'
 
 module MysqlInfo
@@ -19,19 +19,20 @@ class WebInterface < Sinatra::Base
   end
 
   post '/' do
-    client = Mysql2::Client.new(
+    ActiveRecord::Base.establish_connection(
+      :adapter => 'mysql',
       :host => 'mg.uncb.iitp.ru',
       :username => params[:username],
       :password => params[:password],
       :database => 'information_schema'
     )
 
-    query = client.query(
-           "select TABLE_SCHEMA,TABLE_NAME,DATA_LENGTH,INDEX_LENGTH
-            from TABLES WHERE TABLE_SCHEMA!='information_schema'").each.to_a
+    query = ActiveRecord::Base.connection.execute(
+           "select TABLE_SCHEMA,DATA_LENGTH
+            from TABLES WHERE TABLE_SCHEMA!='information_schema'").to_a
 
     @name_size = query.inject(Hash.new(0)) do |h, n|
-      h[n['TABLE_SCHEMA']] += n['DATA_LENGTH'] if n['DATA_LENGTH']
+      h[n.first] += n.last.to_i if n.last
       h
     end
 
