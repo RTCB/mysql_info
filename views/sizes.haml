@@ -10,7 +10,7 @@
           Size in Mb
       - @name_size.each_with_index do |entry, i|
         %tr{:class => i.even? ? 'even' : 'odd'}
-          %td
+          %td.name
             = entry[0]
-          %td
+          %td.size
             = MysqlInfo.commify((entry[1].to_f/1048576).round)
