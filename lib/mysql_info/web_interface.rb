@@ -33,7 +33,7 @@ class WebInterface < Sinatra::Base
             from TABLES WHERE TABLE_SCHEMA!='information_schema'").to_a
 
     @name_size = query.inject(Hash.new(0)) do |h, n|
-      h[n.first] += n.last.to_i if n.last
+      h[n.first] += n.to_a.last.to_i if n.to_a.last
       h
     end
 
