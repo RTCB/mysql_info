@@ -11,6 +11,6 @@
       - @name_size.each_with_index do |entry, i|
         %tr{:class => i.even? ? 'even' : 'odd'}
           %td.name
-            = entry[0]
+            = entry.first
           %td.size
-            = MysqlInfo.commify((entry[1].to_f/1048576).round)
+            = MysqlInfo.commify((entry.last.to_f/1048576).round)

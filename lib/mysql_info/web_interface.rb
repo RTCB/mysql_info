@@ -30,12 +30,11 @@ class WebInterface < Sinatra::Base
 
     query = ActiveRecord::Base.connection.execute(
            "select TABLE_SCHEMA,DATA_LENGTH
-            from TABLES WHERE TABLE_SCHEMA!='information_schema'").to_a
+            from TABLES WHERE TABLE_SCHEMA!='information_schema'")
 
-    @name_size = query.inject(Hash.new(0)) do |h, n|
-      h[n.first] += n.to_a.last.to_i if n.to_a.last
-      h
-    end
+    @name_size = Hash.new(0)
+    query.each{|r| @name_size[r.first] += r.last.to_i if r.last }
+    @name_size = @name_size.sort{|a,b| a.last<=>b.last}.reverse
 
     haml :sizes
   end
